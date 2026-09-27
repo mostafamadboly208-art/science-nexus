@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المواد | Science Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#2b6cb0;
+    --primary-light:#ebf4fb;
+    --accent:#38b2ac;
+    --bg:#f7fafc;
+    --card:#ffffff;
+    --text:#2d3748;
+    --muted:#718096;
+    --shadow:0 8px 24px rgba(43,108,176,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Cairo',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  header{
+    background:linear-gradient(135deg,#2b6cb0 0%,#38b2ac 100%);
+    padding:22px 20px 80px;
+    color:#fff;
+    border-radius:0 0 40px 40px;
+    box-shadow:var(--shadow);
+    position:relative;
+    text-align:center;
+  }
+  .back-btn{
+    position:absolute;
+    top:20px;right:20px;
+    background:rgba(255,255,255,.2);
+    border:1.5px solid rgba(255,255,255,.5);
+    color:#fff;
+    font-family:'Cairo',sans-serif;
+    font-size:.9rem;font-weight:700;
+    padding:7px 16px;
+    border-radius:30px;
+    cursor:pointer;
+    transition:background .2s;
+  }
+  .back-btn:hover{background:rgba(255,255,255,.35)}
+  .header-title{font-size:1.8rem;font-weight:800;margin-top:22px}
+  .header-sub{opacity:.9;font-size:.95rem;margin-top:4px}
+  .breadcrumb{
+    display:inline-block;
+    margin-top:14px;
+    background:rgba(255,255,255,.18);
+    padding:6px 18px;
+    border-radius:30px;
+    font-size:.85rem;
+  }
+
+  main{
+    flex:1;
+    max-width:1000px;width:100%;
+    margin:-50px auto 40px;
+    padding:0 20px;
+  }
+  .step-title{
+    text-align:center;
+    font-size:1.4rem;font-weight:800;color:var(--primary);
+    margin-bottom:24px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:20px;
+  }
+  .card{
+    background:var(--card);
+    border-radius:20px;
+    padding:30px 18px 24px;
+    text-align:center;
+    cursor:pointer;
+    border:2px solid transparent;
+    box-shadow:var(--shadow);
+    transition:transform .25s, border-color .25s, box-shadow .25s;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;inset:auto 0 0 0;height:5px;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    opacity:0;transition:opacity .25s;
+  }
+  .card:hover{transform:translateY(-7px);border-color:var(--accent);box-shadow:0 16px 32px rgba(43,108,176,.18)}
+  .card:hover::before{opacity:1}
+  .card-icon{
+    width:72px;height:72px;margin:0 auto 14px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:2rem;
+    background:var(--primary-light);
+    transition:transform .3s;
+  }
+  .card:hover .card-icon{transform:scale(1.12) rotate(-6deg)}
+  .card-title{font-size:1.15rem;font-weight:800}
+  .card-sub{font-size:.88rem;color:var(--muted);margin-top:4px}
+  .arrow{display:inline-block;margin-top:12px;color:var(--accent);font-weight:700;font-size:.92rem}
+
+  footer{
+    text-align:center;padding:22px 10px;color:var(--muted);
+    font-size:.9rem;border-top:1px solid #e2e8f0;
+  }
+  footer b{color:var(--primary)}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="back-btn" onclick="goBack()">→ رجوع</button>
+  <h1 class="header-title" id="pageTitle">المواد</h1>
+  <span class="breadcrumb" id="crumb">Science Nexus</span>
+</header>
+
+<main>
+  <div id="content"></div>
+</main>
+
+<footer>
+  <b>Science Nexus</b> — منصة طلاب كلية العلوم، جامعة الزقازيق © 2026
+</footer>
+
+<script>
+  // ===== قراءة البيانات من الرابط =====
+  const params = new URLSearchParams(location.search);
+  const level   = params.get('level')   || 'المستوى الأول';
+  const system  = params.get('system')  || '';
+  const section = params.get('section') || '';
+  const term    = params.get('term')    || '';
+
+  const SUBJECT_ICONS = ['🧪','📐','🔬','🧬','⚗️','📊','🌿'];
+
+  // مسار التنقل
+  let path = ['المواد'];
+  if(system)  path.unshift(system);
+  if(section) path.unshift(section);
+  if(term)    path.unshift(term);
+  path.unshift(level);
+
+  function render(){
+    document.getElementById('pageTitle').textContent =
+      path[path.length-1] === 'المواد' ? term + ' — المواد' : path[path.length-1];
+    document.getElementById('crumb').textContent = 'Science Nexus ← ' + path.join(' ← ');
+
+    const c = document.getElementById('content');
+    const last = path[path.length-1];
+
+    if(last === 'المواد'){
+      // 7 مواد مؤقتة
+      let cards = '';
+      for(let i=1; i<=7; i++){
+        cards += `
+          <div class="card" onclick="chooseSubject('مادة ${i}')">
+            <div class="card-icon">${SUBJECT_ICONS[i-1]}</div>
+            <div class="card-title">مادة ${i}</div>
+            <div class="card-sub">محاضرات • سكاشن</div>
+            <span class="arrow">ادخل ←</span>
+          </div>`;
+      }
+      c.innerHTML = `<h2 class="step-title">📚 اختر المادة</h2><div class="grid">${cards}</div>`;
+    }
+    else if(path.length === pathIndexOfSubject()+1){
+      // جوه المادة: محاضرات أو سكاشن
+      c.innerHTML = `
+        <h2 class="step-title">📂 اختر: محاضرات ولا سكاشن؟</h2>
+        <div class="grid">
+          <div class="card" onclick="chooseType('المحاضرات')">
+            <div class="card-icon">📄</div>
+            <div class="card-title">المحاضرات</div>
+            <div class="card-sub">PDF • كويزات • امتحانات • شروحات</div>
+            <span class="arrow">ادخل ←</span>
+          </div>
+          <div class="card" onclick="chooseType('السكاشن')">
+            <div class="card-icon">🧪</div>
+            <div class="card-title">السكاشن</div>
+            <div class="card-sub">سكشن PDF • شرح السكشن</div>
+            <span class="arrow">ادخل ←</span>
+          </div>
+        </div>`;
+    }
+    else if(last === 'المحاضرات'){
+      // جوه المحاضرات: 4 خيارات
+      c.innerHTML = `
+        <h2 class="step-title">📄 محاضرات ${path[pathIndexOfSubject()]}</h2>
+        <div class="grid">
+          <div class="card" onclick="chooseContent('محاضرات PDF')">
+            <div class="card-icon">📑</div>
+            <div class="card-title">محاضرات PDF</div>
+            <span class="arrow">افتح ←</span>
+          </div>
+          <div class="card" onclick="chooseContent('كويزات على المحاضرات')">
+            <div class="card-icon">❓</div>
+            <div class="card-title">كويزات على المحاضرات</div>
+            <span class="arrow">افتح ←</span>
+          </div>
+          <div class="card" onclick="chooseContent('امتحانات السنين السابقة')">
+            <div class="card-icon">📝</div>
+            <div class="card-title">امتحانات السنين السابقة</div>
+            <span class="arrow">افتح ←</span>
+          </div>
+          <div class="card" onclick="chooseContent('شرح المحاضرة')">
+            <div class="card-icon">🎬</div>
+            <div class="card-title">شرح المحاضرة</div>
+            <span class="arrow">افتح ←</span>
+          </div>
+        </div>`;
+    }
+    else if(last === 'السكاشن'){
+      // جوه السكاشن: خيارين
+      c.innerHTML = `
+        <h2 class="step-title">🧪 سكاشن ${path[pathIndexOfSubject()]}</h2>
+        <div class="grid">
+          <div class="card" onclick="chooseContent('السكشن PDF')">
+            <div class="card-icon">📑</div>
+            <div class="card-title">السكشن PDF</div>
+            <span class="arrow">افتح ←</span>
+          </div>
+          <div class="card" onclick="chooseContent('شرح السكشن')">
+            <div class="card-icon">🎬</div>
+            <div class="card-title">شرح السكشن</div>
+            <span class="arrow">افتح ←</span>
+          </div>
+        </div>`;
+    }
+  }
+
+  function pathIndexOfSubject(){
+    return path.findIndex(p => p.startsWith('مادة'));
+  }
+
+  function chooseSubject(sub){
+    path.push(sub); render(); scrollUp();
+  }
+  function chooseType(type){
+    path.push(type); render(); scrollUp();
+  }
+  function chooseContent(item){
+    path.push(item);
+    document.getElementById('crumb').textContent = 'Science Nexus ← ' + path.join(' ← ');
+    alert('اخترت: ' + path.join(' ← ') + '\n\n(هنا هنحط محتوى ' + item + ' لما نجهزه ✅)');
+  }
+
+  function scrollUp(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+  function goBack(){
+    if(path.length > 1 && path[path.length-1] !== level){
+      path.pop(); render(); scrollUp();
+    } else {
+      // نرجع لصفحة المستوى بنفس الاختيارات
+      const lvlNum = {'المستوى الأول':'1','المستوى الثاني':'2','المستوى الثالث':'3','المستوى الرابع':'4'}[level] || '1';
+      location.href = 'level.html?level=' + lvlNum;
+    }
+  }
+
+  render();
+</script>
+
+</body>
+</html>

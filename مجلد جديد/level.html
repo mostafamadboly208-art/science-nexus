@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المستوى | Science Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#2b6cb0;
+    --primary-light:#ebf4fb;
+    --accent:#38b2ac;
+    --bg:#f7fafc;
+    --card:#ffffff;
+    --text:#2d3748;
+    --muted:#718096;
+    --shadow:0 8px 24px rgba(43,108,176,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Cairo',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  header{
+    background:linear-gradient(135deg,#2b6cb0 0%,#38b2ac 100%);
+    padding:22px 20px 80px;
+    color:#fff;
+    border-radius:0 0 40px 40px;
+    box-shadow:var(--shadow);
+    position:relative;
+    text-align:center;
+  }
+  .back-btn{
+    position:absolute;
+    top:20px;right:20px;
+    background:rgba(255,255,255,.2);
+    border:1.5px solid rgba(255,255,255,.5);
+    color:#fff;
+    font-family:'Cairo',sans-serif;
+    font-size:.9rem;font-weight:700;
+    padding:7px 16px;
+    border-radius:30px;
+    cursor:pointer;
+    transition:background .2s;
+  }
+  .back-btn:hover{background:rgba(255,255,255,.35)}
+  .header-title{font-size:1.8rem;font-weight:800;margin-top:22px}
+  .header-sub{opacity:.9;font-size:.95rem;margin-top:4px}
+  .breadcrumb{
+    display:inline-block;
+    margin-top:14px;
+    background:rgba(255,255,255,.18);
+    padding:6px 18px;
+    border-radius:30px;
+    font-size:.85rem;
+  }
+
+  main{
+    flex:1;
+    max-width:1000px;width:100%;
+    margin:-50px auto 40px;
+    padding:0 20px;
+  }
+  .step-title{
+    text-align:center;
+    font-size:1.4rem;font-weight:800;color:var(--primary);
+    margin-bottom:24px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+  }
+  .card{
+    background:var(--card);
+    border-radius:20px;
+    padding:30px 18px 24px;
+    text-align:center;
+    cursor:pointer;
+    border:2px solid transparent;
+    box-shadow:var(--shadow);
+    transition:transform .25s, border-color .25s, box-shadow .25s;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;inset:auto 0 0 0;height:5px;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    opacity:0;transition:opacity .25s;
+  }
+  .card:hover{transform:translateY(-7px);border-color:var(--accent);box-shadow:0 16px 32px rgba(43,108,176,.18)}
+  .card:hover::before{opacity:1}
+  .card-icon{
+    width:72px;height:72px;margin:0 auto 14px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:2rem;
+    background:var(--primary-light);
+    transition:transform .3s;
+  }
+  .card:hover .card-icon{transform:scale(1.12) rotate(-6deg)}
+  .card-title{font-size:1.2rem;font-weight:800}
+  .card-sub{font-size:.88rem;color:var(--muted);margin-top:4px}
+  .arrow{display:inline-block;margin-top:12px;color:var(--accent);font-weight:700;font-size:.92rem}
+
+  /* الأقسام الكثيرة: عمودين */
+  .sections-grid{
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  }
+
+  footer{
+    text-align:center;padding:22px 10px;color:var(--muted);
+    font-size:.9rem;border-top:1px solid #e2e8f0;
+  }
+  footer b{color:var(--primary)}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="back-btn" onclick="goBack()">→ رجوع</button>
+  <h1 class="header-title" id="levelTitle">المستوى</h1>
+  <p class="header-sub">اختر نظامك الدراسي</p>
+  <span class="breadcrumb" id="crumb">Science Nexus</span>
+</header>
+
+<main>
+  <div id="content"></div>
+</main>
+
+<footer>
+  <b>Science Nexus</b> — منصة طلاب كلية العلوم، جامعة الزقازيق © 2026
+</footer>
+
+<script>
+  // ===== البيانات =====
+  const LEVELS = {
+    1:'المستوى الأول', 2:'المستوى الثاني',
+    3:'المستوى الثالث', 4:'المستوى الرابع'
+  };
+  const CREDIT_SECTIONS = [
+    'علوم البصريات والليزر','كيمياء حيوية \ ميكروبيولوجي',
+    'كيمياء تطبيقية صناعية','علوم البترول والمياه','فيزياء إشعاعية طبية'
+  ];
+  const GENERAL_SECTIONS = [
+    'كيمياء حيوي','كيمياء حيوي / كيمياء','جيولوجيا','جيولوجيا / كيمياء',
+    'جيوفيزياء','كيمياء','كيمياء / علوم الحاسب',
+    'نبات','ميكروبيولوجي','تقنية حيوية','نبات / كيمياء',
+    'ميكروبيولوجي / كيمياء','حيوان','حيوان / كيمياء','حشرات / كيمياء'
+  ];
+  const SECTION_ICONS = {
+    'علوم البصريات والليزر':'🔦','كيمياء حيوية \ ميكروبيولوجي':'🦠',
+    'كيمياء تطبيقية صناعية':'⚗️','علوم البترول والمياه':'🛢️',
+    'فيزياء إشعاعية طبية':'☢️','كيمياء حيوي':'🧬','كيمياء حيوي / كيمياء':'🧪',
+    'جيولوجيا':'🌋','جيولوجيا / كيمياء':'💎','جيوفيزياء':'🌍','كيمياء':'⚗️',
+    'كيمياء / علوم الحاسب':'💻','نبات':'🌿','ميكروبيولوجي':'🔬',
+    'تقنية حيوية':'🧬','نبات / كيمياء':'🌱','ميكروبيولوجي / كيمياء':'🧫',
+    'حيوان':'🐾','حيوان / كيمياء':'🧬','حشرات / كيمياء':'🐞'
+  };
+
+  // ===== قراءة المستوى من الرابط =====
+  const params = new URLSearchParams(location.search);
+  const level = params.get('level') || '1';
+  const levelName = LEVELS[level] || 'المستوى';
+
+  let path = [levelName];  // مسار التنقل
+
+  function render(){
+    document.getElementById('levelTitle').textContent = levelName;
+    document.getElementById('crumb').textContent = 'Science Nexus ← ' + path.join(' ← ');
+    const c = document.getElementById('content');
+
+    if(path.length === 1){
+      // الخطوة 1: اختيار النظام
+      c.innerHTML = `
+        <h2 class="step-title">اختر نظامك الدراسي</h2>
+        <div class="grid">
+          <div class="card" onclick="chooseSystem('عام')">
+            <div class="card-icon">📖</div>
+            <div class="card-title">نظام عام</div>
+            <div class="card-sub">النظام الساعات المعتمدة</div>
+            <span class="arrow">اختار ←</span>
+          </div>
+          <div class="card" onclick="chooseSystem('كريديت')">
+            <div class="card-icon">🎯</div>
+            <div class="card-title">نظام الكريديت</div>
+            <div class="card-sub">بناء تخصصك بنفسك</div>
+            <span class="arrow">اختار ←</span>
+          </div>
+        </div>`;
+    }
+    else if(path.length === 2 && path[1] === 'كريديت'){
+      // الخطوة 2: أقسام الكريديت
+      c.innerHTML = `
+        <h2 class="step-title">🔬 اختر قسمك</h2>
+        <div class="grid sections-grid">
+          ${CREDIT_SECTIONS.map(s=>`
+            <div class="card" onclick="chooseSection('${s}')">
+              <div class="card-icon">${SECTION_ICONS[s]||'🔬'}</div>
+              <div class="card-title" style="font-size:1.05rem">${s}</div>
+              <span class="arrow">اختار ←</span>
+            </div>`).join('')}
+        </div>`;
+    }
+    else if(path.length === 2 && path[1] === 'عام' && level !== '1'){
+      // الخطوة 2: أقسام العام (من التاني لرابعه بس)
+      c.innerHTML = `
+        <h2 class="step-title">🔬 اختر قسمك</h2>
+        <div class="grid sections-grid">
+          ${GENERAL_SECTIONS.map(s=>`
+            <div class="card" onclick="chooseSection('${s}')">
+              <div class="card-icon">${SECTION_ICONS[s]||'🔬'}</div>
+              <div class="card-title" style="font-size:1.05rem">${s}</div>
+              <span class="arrow">اختار ←</span>
+            </div>`).join('')}
+        </div>`;
+    }
+    else{
+      // الخطوة الأخيرة: الترم
+      c.innerHTML = `
+        <h2 class="step-title">📅 اختر الترم</h2>
+        <div class="grid">
+          <div class="card" onclick="chooseTerm('الترم الأول')">
+            <div class="card-icon">🍂</div>
+            <div class="card-title">الترم الأول</div>
+            <span class="arrow">اختار ←</span>
+          </div>
+          <div class="card" onclick="chooseTerm('الترم الثاني')">
+            <div class="card-icon">🌸</div>
+            <div class="card-title">الترم الثاني</div>
+            <span class="arrow">اختار ←</span>
+          </div>
+        </div>`;
+    }
+  }
+
+  function chooseSystem(sys){
+    path = [levelName, sys];
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function chooseSection(sec){
+    path = [levelName, path[1], sec];
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function chooseTerm(term){
+    path.push(term);
+    document.getElementById('crumb').textContent = 'Science Nexus ← ' + path.join(' ← ');
+    const secs = path.length === 3 ? '' : '&section=' + encodeURIComponent(path[2]);
+    setTimeout(()=>{
+      location.href = 'subjects.html?level=' + encodeURIComponent(levelName)
+        + '&system=' + encodeURIComponent(path[1]) + secs
+        + '&term=' + encodeURIComponent(term);
+    }, 350);
+  }
+
+  function goBack(){
+    if(path.length > 1){ path.pop(); render(); window.scrollTo({top:0, behavior:'smooth'}); }
+    else location.href = 'index.html';
+  }
+
+  render();
+</script>
+
+</body>
+</html>

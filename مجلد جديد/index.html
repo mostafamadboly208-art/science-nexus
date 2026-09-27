@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Nexus | كلية العلوم - جامعة الزقازيق</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#2b6cb0;
+    --primary-light:#ebf4fb;
+    --accent:#38b2ac;
+    --bg:#f7fafc;
+    --card:#ffffff;
+    --text:#2d3748;
+    --muted:#718096;
+    --shadow:0 8px 24px rgba(43,108,176,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Cairo',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ===== الهيدر ===== */
+  header{
+    background:linear-gradient(135deg,#2b6cb0 0%,#38b2ac 100%);
+    padding:28px 20px 90px;
+    text-align:center;
+    color:#fff;
+    border-radius:0 0 40px 40px;
+    box-shadow:var(--shadow);
+  }
+  .logo-badge{
+    width:90px;height:90px;
+    margin:0 auto;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2.6rem;
+    background:rgba(255,255,255,.18);
+    border:3px solid rgba(255,255,255,.6);
+    backdrop-filter:blur(4px);
+  }
+  .site-name{
+    font-size:2.1rem;
+    font-weight:800;
+    letter-spacing:1px;
+    margin-top:14px;
+  }
+  .site-sub{
+    font-size:1.05rem;
+    font-weight:600;
+    opacity:.92;
+    margin-top:4px;
+  }
+
+  /* ===== المحتوى ===== */
+  main{
+    flex:1;
+    max-width:1000px;
+    width:100%;
+    margin:-55px auto 40px;
+    padding:0 20px;
+  }
+  .section-title{
+    text-align:center;
+    font-size:1.5rem;
+    font-weight:800;
+    color:var(--primary);
+    margin-bottom:8px;
+  }
+  .section-desc{
+    text-align:center;
+    color:var(--muted);
+    margin-bottom:28px;
+  }
+
+  .levels{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:22px;
+  }
+  .level-card{
+    background:var(--card);
+    border-radius:22px;
+    padding:34px 20px 28px;
+    text-align:center;
+    cursor:pointer;
+    border:2px solid transparent;
+    box-shadow:var(--shadow);
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .level-card::before{
+    content:'';
+    position:absolute;
+    inset:auto 0 0 0;
+    height:5px;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    opacity:0;
+    transition:opacity .25s;
+  }
+  .level-card:hover{
+    transform:translateY(-8px);
+    border-color:var(--accent);
+    box-shadow:0 16px 32px rgba(43,108,176,.18);
+  }
+  .level-card:hover::before{opacity:1}
+
+  .level-icon{
+    width:78px;height:78px;
+    margin:0 auto 16px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2.1rem;
+    background:var(--primary-light);
+    transition:transform .3s;
+  }
+  .level-card:hover .level-icon{transform:scale(1.12) rotate(-6deg)}
+  .level-title{font-size:1.3rem;font-weight:800}
+  .level-sub{font-size:.9rem;color:var(--muted);margin-top:4px}
+
+  .arrow{
+    display:inline-block;
+    margin-top:14px;
+    color:var(--accent);
+    font-weight:700;
+    font-size:.95rem;
+  }
+
+  /* ===== الفوتر ===== */
+  footer{
+    text-align:center;
+    padding:22px 10px;
+    color:var(--muted);
+    font-size:.9rem;
+    border-top:1px solid #e2e8f0;
+  }
+  footer b{color:var(--primary)}
+
+  @media (max-width:520px){
+    .site-name{font-size:1.7rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge">🧪</div>
+  <h1 class="site-name">Science Nexus</h1>
+  <p class="site-sub">كلية العلوم — جامعة الزقازيق</p>
+</header>
+
+<main>
+  <h2 class="section-title">🎓 اختر مستواك الدراسي</h2>
+  <p class="section-desc">محاضرات • كويزات • امتحانات سابقة • شروحات — كلها في مكان واحد</p>
+
+  <div class="levels">
+    <div class="level-card" onclick="go('level1')">
+      <div class="level-icon">🌱</div>
+      <div class="level-title">المستوى الأول</div>
+      <div class="level-sub">عام / كريديت</div>
+      <span class="arrow">ادخل ←</span>
+    </div>
+
+    <div class="level-card" onclick="go('level2')">
+      <div class="level-icon">📘</div>
+      <div class="level-title">المستوى الثاني</div>
+      <div class="level-sub">عام / كريديت</div>
+      <span class="arrow">ادخل ←</span>
+    </div>
+
+    <div class="level-card" onclick="go('level3')">
+      <div class="level-icon">🔬</div>
+      <div class="level-title">المستوى الثالث</div>
+      <div class="level-sub">عام / كريديت</div>
+      <span class="arrow">ادخل ←</span>
+    </div>
+
+    <div class="level-card" onclick="go('level4')">
+      <div class="level-icon">🎓</div>
+      <div class="level-title">المستوى الرابع</div>
+      <div class="level-sub">عام / كريديت</div>
+      <span class="arrow">ادخل ←</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <b>Science Nexus</b> — منصة طلاب كلية العلوم، جامعة الزقازيق © 2026
+</footer>
+
+<script>
+  function go(level){
+    // هنا هنحول لصفحة المستوى لما نعملها
+    alert('هننتقل لصفحة: ' + level + '
+(الصفحة دي لسه هنعملها)');
+  }
+</script>
+
+</body>
+</html>
